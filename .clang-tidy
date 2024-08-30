@@ -11,8 +11,12 @@ Checks: "*,
         -readability-else-after-return,
         -readability-static-accessed-through-instance,
         -readability-avoid-const-params-in-decls,
+        -readability-identifier-length,
+        -bugprone-easily-swappable-parameters,
         -cppcoreguidelines-non-private-member-variables-in-classes,
         -misc-non-private-member-variables-in-classes,
+        -hicpp-uppercase-literal-suffix,
+        -readability-uppercase-literal-suffix,
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
@@ -23,6 +27,10 @@ CheckOptions:
     value: 'x|y|z|i'
   - key: readability-identifier-length.IgnoredParameterNames
     value: 'x|y|z'
+  - key: hicpp-uppercase-literal-suffix.NewSuffixes
+    value: 'f'
+  - key: readabilty-uppercase-literal-suffix.NewSuffixes
+    value: 'f'
 
 
 
