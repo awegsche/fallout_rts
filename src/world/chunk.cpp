@@ -47,3 +47,8 @@ size_t Chunk::get_cell_position(int i, int j) const
     const size_t chunk_stride = j * m_world->m_chunk_size;
     return world_stride + chunk_stride + i;
 }
+bool Chunk::contains_position(CellPosition const &pos) const
+{
+    return pos.x >= m_world->m_chunk_size * pos_x && pos.x < m_world->m_chunk_size * (pos_x + 1)
+           && pos.y >= m_world->m_chunk_size * pos_y && pos.y < m_world->m_chunk_size * (pos_y + 1);
+}

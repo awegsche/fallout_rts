@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "raylib.h"
 #include "ui/ui.hpp"
 
 void Game::loop()
@@ -8,12 +9,16 @@ void Game::loop()
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)) { camera_move = !camera_move; }
 
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || state == GameState::Building) {
+            mouse_over = world.click(camera);
+        }
+
         BeginDrawing();
         ClearBackground({ 220, 200, 150, 255 });
 
         BeginMode3D(camera);
         {
-            world.draw(camera.target);
+            world.draw(*this);
         }
         EndMode3D();
 

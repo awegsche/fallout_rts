@@ -6,49 +6,47 @@
 #include <raylib.h>
 #include <raymath.h>
 
-enum class BuildingKind: uint32_t {
-    Vault,
-    Shack01,
-    StreetStraight,
-    StreetTwo,
-    StreetThree,
-    BuildingCount
-};
+enum class BuildingKind : uint32_t { Vault, Shack01, StreetStraight, StreetTwo, StreetThree, BuildingCount };
 
 class Chunk;
 class ChunkMut;
+class Game;
 
-class BuildingManager {
-    public:
-        explicit BuildingManager(Shader shader) {
-            m_models[(size_t)BuildingKind::Vault] = LoadModel("assets\\vault.obj");
-            m_models[(size_t)BuildingKind::Shack01] = LoadModel("assets\\shack01.obj");
-            m_models[(size_t)BuildingKind::StreetStraight] = LoadModel("assets\\street_colorful.obj");
-            m_models[(size_t)BuildingKind::StreetTwo] = LoadModel("assets\\street_two.obj");
-            m_models[(size_t)BuildingKind::StreetThree] = LoadModel("assets\\street_three.obj");
+class BuildingManager
+{
+  public:
+    explicit BuildingManager(Shader shader)
+    {
+        m_models[(size_t)BuildingKind::Vault]          = LoadModel("assets\\vault.obj");
+        m_models[(size_t)BuildingKind::Shack01]        = LoadModel("assets\\shack01.obj");
+        m_models[(size_t)BuildingKind::StreetStraight] = LoadModel("assets\\street_colorful.obj");
+        m_models[(size_t)BuildingKind::StreetTwo]      = LoadModel("assets\\street_two.obj");
+        m_models[(size_t)BuildingKind::StreetThree]    = LoadModel("assets\\street_three.obj");
 
-            for (const auto& model: m_models) {
-                model.materials[0].shader = shader;
-            }
-        }
+        for (const auto &model : m_models) { model.materials[0].shader = shader; }
+    }
 
-        static void place_building(BuildingKind kind, ChunkMut& chunk, int x, int y);
+    static void place_building(BuildingKind kind, ChunkMut &chunk, int x, int y);
 
-        void draw(Chunk const& chunk) const;
+    void draw(Chunk const &chunk, Game const& game) const;
 
-    private:
-        std::array<Model, (size_t)BuildingKind::BuildingCount> m_models{};
+  private:
+    std::array<Model, (size_t)BuildingKind::BuildingCount> m_models{};
 };
 
-struct BuildingBase {
-
+struct BuildingBase
+{
 };
 
-struct Building {
-    BuildingKind kind;
-    CellPosition position;
-    int value;
-    Matrix transform = MatrixIdentity();
+enum class BuildingSurvivalKind { Alive, Dead, Remove };
+
+struct Building
+{
+    BuildingKind         kind = BuildingKind::StreetStraight;
+    CellPosition         position{};
+    int                  value{};
+    Matrix               transform     = MatrixIdentity();
+    BuildingSurvivalKind survival_kind = BuildingSurvivalKind::Alive;
 };
 
 #endif

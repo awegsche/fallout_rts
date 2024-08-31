@@ -44,6 +44,7 @@ add_executable(fallout_rts
     "src/world/buildings.cpp"
     "src/ui/ui.cpp"
     "src/world/chunk.cpp"
+    "src/world/world.cpp"
     )
 
 target_include_directories(fallout_rts PRIVATE

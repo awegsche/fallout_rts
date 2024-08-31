@@ -6,11 +6,18 @@
 #include "world/buildings.hpp"
 #include "world/chunk.hpp"
 #include "world/terrain.hpp"
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <vector>
 
 #include <iostream>
+
+constexpr uint32_t DEFAULT_CHUNK_SIZE   = 64;
+constexpr uint32_t DEFAULT_WORLD_WIDTH  = 10;
+constexpr uint32_t DEFAULT_WORLD_HEIGHT = 10;
+
+class Game;
 
 class World
 {
@@ -50,7 +57,7 @@ class World
         for (int j = 0; j < m_height; ++j) {
             for (int i = 0; i < m_width; ++i) {
                 // m_chunks.emplace_back(m_chunk_size, i, j);
-                Chunk ch{this, (uint32_t)i, (uint32_t)j};
+                Chunk ch{ this, (uint32_t)i, (uint32_t)j };
 
                 for (int h = 0; h < m_chunk_size; ++h) {
                     for (int w = 0; w < m_chunk_size; ++w) {
@@ -68,14 +75,7 @@ class World
         }
     }
 
-    void draw(Vector3 const &camera_pos) const
-    {
-        const auto pred = [this](Chunk const &chunk) {
-            m_terrain_manager->draw_chunk(chunk);
-            m_building_manager->draw(chunk);
-        };
-        do_for_visible_chunks(camera_pos, pred);
-    }
+    void draw(Game const &game) const;
 
     std::optional<CellPosition> click(Camera3D const &camera)
     {
@@ -98,7 +98,7 @@ class World
         for (int j = y - 1; j <= y + 1; ++j) {
             for (int i = x - 1; i <= x + 1; ++i) {
                 if (j >= 0 && j < m_height && i >= 0 && i < m_width) {
-                    const Chunk chunk{this, (uint32_t)i, (uint32_t)j};
+                    const Chunk chunk{ this, (uint32_t)i, (uint32_t)j };
                     p(chunk);
                 }
             }
@@ -111,9 +111,9 @@ class World
     std::vector<Cell>                m_cells;
     std::vector<Matrix>              m_cell_transforms;
     std::vector<Building>            m_buildings;
-    uint32_t                         m_chunk_size = 32;
-    uint32_t                         m_width      = 10;
-    uint32_t                         m_height     = 10;
+    uint32_t                         m_chunk_size = DEFAULT_CHUNK_SIZE;
+    uint32_t                         m_width      = DEFAULT_WORLD_WIDTH;
+    uint32_t                         m_height     = DEFAULT_WORLD_HEIGHT;
 };
 
 #endif

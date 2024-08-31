@@ -43,6 +43,8 @@ struct Chunk
 
     [[nodiscard]] size_t get_cell_position(int i, int j) const;
 
+    [[nodiscard]] bool contains_position(CellPosition const &pos) const;
+
     /** Returns the position of the cell the mouse is over.
      *
      * The return value of this function is only meaningfull if `mouse_is_over()` returns `true`.

@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "ui/ui.hpp"
+#include "utils/cell_position.hpp"
 #include "world/world.hpp"
 
 constexpr int WIDTH  = 1024;
@@ -11,6 +12,7 @@ constexpr int HEIGHT = 512;
 enum class GameState {
     Running,
     Building,
+    Paused,
 };
 
 struct WindowContext
@@ -50,8 +52,6 @@ struct Game
 
     void loop();
 
-    void draw(Vector3 camera_pos) const { world.draw(camera_pos); }
-
     // todo: private and const access
     // ctx must be declared first
     uint32_t      width  = WIDTH;
@@ -65,6 +65,8 @@ struct Game
     GameState   state;
     size_t      ticks       = 0;
     bool        camera_move = false;
+    std::optional<CellPosition> mouse_over;
+    BuildingKind buildin_kind; // for GameState::Building
 };
 
 #endif
