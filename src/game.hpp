@@ -66,7 +66,8 @@ struct Game
     size_t      ticks       = 0;
     bool        camera_move = false;
     std::optional<CellPosition> mouse_over;
-    BuildingKind buildin_kind; // for GameState::Building
+
+    Building* bld_to_construct = nullptr;
 };
 
 #endif

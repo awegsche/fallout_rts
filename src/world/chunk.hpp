@@ -5,7 +5,7 @@
 #include <random>
 
 #include "utils/cell_position.hpp"
-#include "world/buildings.hpp"
+//#include "world/buildings/building_manager.hpp"
 #include "world/terrain.hpp"
 #include <raylib.h>
 #include <raymath.h>

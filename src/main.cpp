@@ -2,6 +2,9 @@
 #include <rlgl.h>
 
 #include "game.hpp"
+#include "world/buildings/building.hpp"
+#include "world/buildings/gatherer.hpp"
+#include "world/buildings/vault.hpp"
 #include "world/world.hpp"
 
 #include "ui/building_menu.hpp"
@@ -14,15 +17,16 @@ int main()
 
     Game game{};
 
-    ChunkMut chunk0{&game.world, 0, 0};
+    game.world.m_buildings["foodgatherer"] = new Gatherer("foodgatherer", "vault", "assets/food_gatherer.obj");
+    game.world.m_buildings["vault"] = new Vault("assets/vault.obj");
 
-    for (int i = 10; i < 30; i += 2) {
-        game.world.m_building_manager->place_building(BuildingKind::Shack01, chunk0, 20, i);
-    }
-    for (int i = 10; i < 30; i += 1) {
-        game.world.m_building_manager->place_building(BuildingKind::StreetStraight, chunk0, 19, i);
-    }
+    game.world.m_buildings.at("vault")->place(game.world, {10, 10});
+    game.world.m_buildings.at("foodgatherer")->place(game.world, {10, 15});
+    game.world.m_buildings.at("foodgatherer")->place(game.world, {30, 25});
 
     game.loop();
 
+    for (auto const b: game.world.m_buildings) {
+        delete b.second;
+    }
 }

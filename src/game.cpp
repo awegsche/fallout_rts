@@ -13,6 +13,8 @@ void Game::loop()
             mouse_over = world.click(camera);
         }
 
+        world.update(1.0f);
+
         BeginDrawing();
         ClearBackground({ 220, 200, 150, 255 });
 

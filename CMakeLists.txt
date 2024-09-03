@@ -40,11 +40,18 @@ add_executable(fallout_rts
     "src/rlights.cpp"
     "src/game.cpp"
     "src/main.cpp"
-    "src/world/terrain.cpp"
-    "src/world/buildings.cpp"
+
+    #ui
     "src/ui/ui.cpp"
+
+    #world
+    "src/world/terrain.cpp"
     "src/world/chunk.cpp"
     "src/world/world.cpp"
+
+    # buildings
+    #"src/world/buildings/building_manager.cpp"
+    "src/world/buildings/gatherer.cpp"
     )
 
 target_include_directories(fallout_rts PRIVATE

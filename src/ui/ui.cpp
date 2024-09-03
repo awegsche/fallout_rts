@@ -1,6 +1,6 @@
 #include "ui.hpp"
 #include "raylib.h"
-#include "world/buildings.hpp"
+#include "world/buildings/building_base.hpp"
 
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
@@ -9,12 +9,12 @@
 
 void Gui::draw(Game &game)
 {
-    if (GuiButton({ 10, (float)game.height - 30, 40, 20 }, "Street")) {
-        if (game.state == GameState::Building && game.buildin_kind == BuildingKind::StreetStraight) {
+    if (GuiButton({ 10, (float)game.height - 30, 60, 20 }, "Food Gatherer")) {
+        if (game.state == GameState::Building) {
             game.state = GameState::Running;
         } else {
-            game.state        = GameState::Building;
-            game.buildin_kind = BuildingKind::StreetStraight;
+            game.state            = GameState::Building;
+            game.bld_to_construct = game.world.m_buildings.at("foodgatherer");
         }
     }
 }
