@@ -28,6 +28,12 @@ class World
 
     World();
 
+    ~World() {
+        for (auto& [key, building]: m_buildings) {
+            delete building;
+        }
+    }
+
     void draw(Game const &game) const;
 
     /* @brief Checks if the mouse is over something (e.g. when clicking on a tile). */

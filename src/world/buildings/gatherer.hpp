@@ -25,6 +25,8 @@ class Gatherer : public Building
         : m_identifier(std::move(identifier)), m_source(std::move(source)), m_model(model)
     {}
 
+    ~Gatherer() = default;
+
     void update(World &world, float dt) override;
 
     void draw() override;

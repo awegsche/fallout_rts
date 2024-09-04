@@ -21,8 +21,10 @@ class Building
     virtual void place(World &world, CellPosition position) = 0;
 
     std::vector<CellPosition> m_positions;
-  //protected:
-    ~Building() = default;
+
+    Building() = default;
+
+    virtual ~Building() = default;
 };
 
 class SingleModelBuilding {

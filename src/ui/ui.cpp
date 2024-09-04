@@ -1,6 +1,5 @@
 #include "ui.hpp"
 #include "raylib.h"
-#include "world/buildings/building_base.hpp"
 
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"

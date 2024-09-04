@@ -63,3 +63,13 @@ target_include_directories(fallout_rts PRIVATE
 target_link_libraries(fallout_rts
     raylib
     )
+
+add_custom_command(TARGET fallout_rts POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets/"
+        "$<TARGET_FILE_DIR:fallout_rts>/assets")
+
+add_custom_command(TARGET fallout_rts POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/shaders/"
+        "$<TARGET_FILE_DIR:fallout_rts>/shaders")

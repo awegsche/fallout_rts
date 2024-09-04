@@ -1,4 +1,5 @@
 .cache
+.vs
 builds
 compile_commands.json
 

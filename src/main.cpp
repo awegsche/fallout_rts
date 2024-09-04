@@ -26,7 +26,4 @@ int main()
 
     game.loop();
 
-    for (auto const b: game.world.m_buildings) {
-        delete b.second;
-    }
 }
