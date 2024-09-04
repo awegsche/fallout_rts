@@ -43,23 +43,18 @@ World::World()
     std::cout << ncells * sizeof(Cell) / 1024 / 1024 << " MB of cell data\n";
     std::cout << ncells * sizeof(Matrix) / 1024 / 1024 << " MB of cell transform data\n";
 
-    for (int j = 0; j < m_height; ++j) {
-        for (int i = 0; i < m_width; ++i) {
+    for (int j = 0; j < m_height * m_chunk_size; ++j) {
+        for (int i = 0; i < m_width * m_chunk_size; ++i) {
             // m_chunks.emplace_back(m_chunk_size, i, j);
-            Chunk ch{ this, (uint32_t)i, (uint32_t)j };
 
-            for (int h = 0; h < m_chunk_size; ++h) {
-                for (int w = 0; w < m_chunk_size; ++w) {
-                    const float value = dist(gen) * 0.1f + 0.5f;
-                    m_cells.emplace_back(TerrainType::Forest, value, -1);
-                    const float x = ch.get_x_offset() + ((float)w + 0.2f + 0.6f * dist(gen)) * GROUND_TILE_SIZE;
-                    const float y = ch.get_y_offset() + ((float)h + 0.2f + 0.6f * dist(gen)) * GROUND_TILE_SIZE;
-                    Matrix      translation = MatrixTranslate(x, 0.0f, y);
-                    Matrix      scale       = MatrixScale(1.0f + dist(gen) * 0.2f, dist(gen) * 0.3f + 1.0f, 1.0f);
+            const float value = dist(gen) * 0.1f + 0.5f;
+            m_cells.emplace_back(TerrainType::Forest, value, -1);
+            const float x           = ((float)i + 0.2f + 0.6f * dist(gen)) * GROUND_TILE_SIZE;
+            const float y           = ((float)j + 0.2f + 0.6f * dist(gen)) * GROUND_TILE_SIZE;
+            Matrix      translation = MatrixTranslate(x, 0.0f, y);
+            Matrix      scale       = MatrixScale(1.0f + dist(gen) * 0.2f, dist(gen) * 0.3f + 1.0f, 1.0f);
 
-                    m_cell_transforms.push_back(MatrixMultiply(scale, translation));
-                }
-            }
+            m_cell_transforms.push_back(MatrixMultiply(scale, translation));
         }
     }
 }

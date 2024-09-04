@@ -72,6 +72,23 @@ class World
         }
     }
 
+    void place_building(const std::string identifier, CellPosition position)
+    {
+        m_buildings.at(identifier)->place(*this, position);
+        for (int j = -1; j <= 1; ++j) {
+            for (int i = -1; i <= 1; ++i) {
+                CellPosition p{ position.x + i, position.y + j };
+                if (p.x >= 0 && p.x < m_chunk_size * m_width && p.y >= 0 && p.y < m_chunk_size * m_height) {
+                    get_cell_mut(p).terrain_type = TerrainType::Plain;
+                }
+            }
+        }
+    }
+
+    Cell& get_cell_mut(CellPosition position) {
+        return m_cells[position.x + position.y * m_chunk_size * m_width];
+    }
+
     std::vector<Chunk>               m_chunks;
     std::unique_ptr<TerrainManager>  m_terrain_manager;
     //std:

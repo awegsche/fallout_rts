@@ -7,9 +7,7 @@
 
 Cell &ChunkMut::get_cell_mut(int i, int j)
 {
-    const size_t world_stride = pos_y * m_world->m_width + pos_x * m_world->m_chunk_size * m_world->m_chunk_size;
-    const size_t chunk_stride = j * m_world->m_chunk_size;
-    return m_world_mut->m_cells[world_stride + chunk_stride + i];
+    return m_world_mut->m_cells[get_cell_position(i,j)];
 }
 
 float Chunk::get_x_offset() const { return GROUND_TILE_SIZE * static_cast<float>(m_world->m_chunk_size * pos_x); }
@@ -43,9 +41,10 @@ Matrix const &Chunk::get_cell_transform(int i, int j) const
 
 size_t Chunk::get_cell_position(int i, int j) const
 {
-    const size_t world_stride = (pos_y * m_world->m_width + pos_x) * m_world->m_chunk_size * m_world->m_chunk_size;
-    const size_t chunk_stride = j * m_world->m_chunk_size;
-    return world_stride + chunk_stride + i;
+    // position inside chunk to global pos
+    const size_t x            = pos_x * m_world->m_chunk_size + i;
+    const size_t y            = pos_y * m_world->m_chunk_size + j;
+    return y * m_world->m_chunk_size * m_world->m_width + x;
 }
 bool Chunk::contains_position(CellPosition const &pos) const
 {

@@ -20,9 +20,9 @@ int main()
     game.world.m_buildings["foodgatherer"] = new Gatherer("foodgatherer", "vault", "assets/food_gatherer.obj");
     game.world.m_buildings["vault"] = new Vault("assets/vault.obj");
 
-    game.world.m_buildings.at("vault")->place(game.world, {10, 10});
-    game.world.m_buildings.at("foodgatherer")->place(game.world, {10, 15});
-    game.world.m_buildings.at("foodgatherer")->place(game.world, {30, 25});
+    game.world.place_building("vault", { 10, 10 });
+    game.world.place_building("foodgatherer", { 10, 15 });
+    game.world.place_building("foodgatherer", { 20, 25 });
 
     game.loop();
 
