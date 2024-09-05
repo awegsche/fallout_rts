@@ -22,7 +22,7 @@ class Gatherer : public Building
 
   public:
     Gatherer(std::string identifier, std::string source, std::string const &model)
-        : m_identifier(std::move(identifier)), m_source(std::move(source)), m_model(model)
+        : Building(std::move(identifier)), m_source(std::move(source)), m_model(model)
     {}
 
     ~Gatherer() = default;
@@ -35,7 +35,6 @@ class Gatherer : public Building
 
   private:
     std::vector<Instance> m_instances;
-    std::string           m_identifier;
     std::string           m_source;
     SingleModelBuilding   m_model;
 };

@@ -23,20 +23,28 @@ class Game;
 class World
 {
   public:
+    World();
+
     World(World const &)            = delete;
     World &operator=(World const &) = delete;
 
-    World();
-
-    ~World()
-    {
-        for (auto &[key, building] : m_buildings) { delete building; }
-    }
+    ~World() = default;
 
     void draw(Game const &game) const;
 
     /* @brief Checks if the mouse is over something (e.g. when clicking on a tile). */
     [[nodiscard]] std::optional<CellPosition> click(Camera3D const &camera) const;
+
+    /**
+     * @brief Updates the game world, called once every frame.
+     *
+     * @param dt The time elpased since last frame.
+     */
+    void update(float dt);
+
+    void place_building(const std::string identifier, CellPosition position);
+
+    Cell &get_cell_mut(CellPosition position) { return m_cells[position.x + position.y * m_chunk_size * m_width]; }
 
     /**
      * @brief Performs `pred` for each visible chunk (e.g. clicking or drawing functionality).
@@ -60,21 +68,13 @@ class World
         }
     }
 
-    /**
-     * @brief Updates the game world, called once every frame.
-     *
-     * @param dt The time elpased since last frame.
-     */
-    void update(float dt)
+    template<class T, class... Args> void new_building_type(Args &&...args)
     {
-        for (auto &building : m_buildings) { building.second->update(*this, dt); }
+        auto new_building                       = std::make_shared<T>(args...);
+        m_buildings[new_building->identifier()] = new_building;
     }
 
-    void place_building(const std::string identifier, CellPosition position);
-
-    Cell &get_cell_mut(CellPosition position) { return m_cells[position.x + position.y * m_chunk_size * m_width]; }
-
-  public: // todo: make private and add accessors
+  public:// todo: make private and add accessors
     std::vector<Chunk>              m_chunks;
     std::unique_ptr<TerrainManager> m_terrain_manager;
     // std:
@@ -82,10 +82,10 @@ class World
     std::vector<Cell>   m_cells;
     std::vector<Matrix> m_cell_transforms;
     // std::vector<Building>            m_buildings;
-    std::unordered_map<std::string, Building *> m_buildings;
-    uint32_t                                    m_chunk_size = DEFAULT_CHUNK_SIZE;
-    uint32_t                                    m_width      = DEFAULT_WORLD_WIDTH;
-    uint32_t                                    m_height     = DEFAULT_WORLD_HEIGHT;
+    std::unordered_map<std::string, std::shared_ptr<Building>> m_buildings;
+    uint32_t                                                   m_chunk_size = DEFAULT_CHUNK_SIZE;
+    uint32_t                                                   m_width      = DEFAULT_WORLD_WIDTH;
+    uint32_t                                                   m_height     = DEFAULT_WORLD_HEIGHT;
 };
 
 #endif

@@ -16,15 +16,21 @@ enum class BuildingSurvivalKind { Alive, Dead, Remove };
 class Building
 {
   public:
+    Building(std::string identifier) : m_identifier(std::move(identifier)) {}
+
+    virtual ~Building() = default;
+
     virtual void update(World &world, float dt) = 0;
     virtual void draw()                         = 0;
     virtual void place(World &world, CellPosition position) = 0;
 
+    std::string const &identifier() const { return m_identifier; }
+
     std::vector<CellPosition> m_positions;
 
-    Building() = default;
+    protected:
+    std::string               m_identifier;
 
-    virtual ~Building() = default;
 };
 
 class SingleModelBuilding {

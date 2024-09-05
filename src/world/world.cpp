@@ -74,6 +74,18 @@ std::optional<CellPosition> World::click(Camera3D const &camera) const
     return pos;
 }
 
+
+/**
+ * @brief Updates the game world, called once every frame.
+ *
+ * @param dt The time elpased since last frame.
+ */
+
+void World::update(float dt)
+{
+    for (auto &building : m_buildings) { building.second->update(*this, dt); }
+}
+
 void World::place_building(const std::string identifier, CellPosition position)
 {
     m_buildings.at(identifier)->place(*this, position);

@@ -90,7 +90,7 @@ struct Game
     bool        camera_move = false;
     std::optional<CellPosition> mouse_over;
 
-    Building* bld_to_construct = nullptr;
+    std::shared_ptr<Building> bld_to_construct = nullptr;
 };
 
 #endif

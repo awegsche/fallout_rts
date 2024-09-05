@@ -20,7 +20,7 @@ void Gatherer::place(World &world, CellPosition position)
 {
     Instance inst;
 
-    auto const *b = world.m_buildings.at(m_source);
+    auto const b = world.m_buildings.at(m_source);
     spdlog::debug("place gatherer");
 
     for (CellPosition const &pos : b->m_positions) {
