@@ -12,6 +12,7 @@ project("fallout_rts" VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
 include(FetchContent)
 
@@ -62,6 +63,7 @@ target_include_directories(fallout_rts PRIVATE
 
 target_link_libraries(fallout_rts
     raylib
+    spdlog::spdlog
     )
 
 add_custom_command(TARGET fallout_rts POST_BUILD

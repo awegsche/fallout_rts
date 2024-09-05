@@ -1,13 +1,16 @@
 #ifndef __GAME_H__
 #define __GAME_H__
 
-#include "raylib.h"
+#include <raylib.h>
+#include <spdlog/spdlog.h>
+
 #include "ui/ui.hpp"
 #include "utils/cell_position.hpp"
 #include "world/world.hpp"
 
 constexpr int WIDTH  = 1024;
 constexpr int HEIGHT = 512;
+constexpr size_t LOG_MSG_BUF_SIZE = 1024;
 
 enum class GameState {
     Running,
@@ -15,11 +18,30 @@ enum class GameState {
     Paused,
 };
 
+inline void log_callback(int msg_type, const char *fmt_str, va_list args)
+{
+    static char buffer[LOG_MSG_BUF_SIZE];
+    vsprintf(buffer, fmt_str, args);
+
+    switch (msg_type) {
+    case LOG_INFO:
+        spdlog::info(buffer);
+        break;
+    case LOG_DEBUG:
+        spdlog::debug(buffer);
+        break;
+    default:
+        spdlog::error(buffer);
+        break;
+    }
+}
+
 struct WindowContext
 {
     WindowContext(uint32_t width, uint32_t height)
     {
         InitWindow(width, height, "Fallout RTS");
+        SetTraceLogCallback(log_callback);
         SetTargetFPS(60);
     }
 
@@ -28,6 +50,7 @@ struct WindowContext
 
     WindowContext(WindowContext &&)            = delete;
     WindowContext &operator=(WindowContext &&) = delete;
+
 
     ~WindowContext() { CloseWindow(); }
 };

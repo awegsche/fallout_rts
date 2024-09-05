@@ -28,10 +28,9 @@ class World
 
     World();
 
-    ~World() {
-        for (auto& [key, building]: m_buildings) {
-            delete building;
-        }
+    ~World()
+    {
+        for (auto &[key, building] : m_buildings) { delete building; }
     }
 
     void draw(Game const &game) const;
@@ -66,40 +65,27 @@ class World
      *
      * @param dt The time elpased since last frame.
      */
-    void update(float dt) {
-        for(auto& building: m_buildings) {
-            building.second->update(*this, dt);
-        }
-    }
-
-    void place_building(const std::string identifier, CellPosition position)
+    void update(float dt)
     {
-        m_buildings.at(identifier)->place(*this, position);
-        for (int j = -1; j <= 1; ++j) {
-            for (int i = -1; i <= 1; ++i) {
-                CellPosition p{ position.x + i, position.y + j };
-                if (p.x >= 0 && p.x < m_chunk_size * m_width && p.y >= 0 && p.y < m_chunk_size * m_height) {
-                    get_cell_mut(p).terrain_type = TerrainType::Plain;
-                }
-            }
-        }
+        for (auto &building : m_buildings) { building.second->update(*this, dt); }
     }
 
-    Cell& get_cell_mut(CellPosition position) {
-        return m_cells[position.x + position.y * m_chunk_size * m_width];
-    }
+    void place_building(const std::string identifier, CellPosition position);
 
-    std::vector<Chunk>               m_chunks;
-    std::unique_ptr<TerrainManager>  m_terrain_manager;
-    //std:
-    //:unique_ptr<BuildingManager> m_building_manager;
-    std::vector<Cell>                m_cells;
-    std::vector<Matrix>              m_cell_transforms;
-    //std::vector<Building>            m_buildings;
-    std::unordered_map<std::string, Building*> m_buildings;
-    uint32_t                         m_chunk_size = DEFAULT_CHUNK_SIZE;
-    uint32_t                         m_width      = DEFAULT_WORLD_WIDTH;
-    uint32_t                         m_height     = DEFAULT_WORLD_HEIGHT;
+    Cell &get_cell_mut(CellPosition position) { return m_cells[position.x + position.y * m_chunk_size * m_width]; }
+
+  public: // todo: make private and add accessors
+    std::vector<Chunk>              m_chunks;
+    std::unique_ptr<TerrainManager> m_terrain_manager;
+    // std:
+    //: unique_ptr<BuildingManager> m_building_manager;
+    std::vector<Cell>   m_cells;
+    std::vector<Matrix> m_cell_transforms;
+    // std::vector<Building>            m_buildings;
+    std::unordered_map<std::string, Building *> m_buildings;
+    uint32_t                                    m_chunk_size = DEFAULT_CHUNK_SIZE;
+    uint32_t                                    m_width      = DEFAULT_WORLD_WIDTH;
+    uint32_t                                    m_height     = DEFAULT_WORLD_HEIGHT;
 };
 
 #endif

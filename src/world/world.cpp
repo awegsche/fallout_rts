@@ -1,5 +1,7 @@
 #include "world.hpp"
 
+#include <spdlog/spdlog.h>
+
 #include "game.hpp"
 
 void World::draw(Game const &game) const
@@ -39,9 +41,9 @@ World::World()
     m_cells.reserve(ncells);
     m_cell_transforms.reserve(ncells);
 
-    std::cout << "reserving space for " << ncells << "cells\n";
-    std::cout << ncells * sizeof(Cell) / 1024 / 1024 << " MB of cell data\n";
-    std::cout << ncells * sizeof(Matrix) / 1024 / 1024 << " MB of cell transform data\n";
+    spdlog::debug("reserving space for {} cells", ncells);
+    spdlog::debug("{:.2} MB of cell data", (float)sizeof(Cell) * ncells / 1024 / 1024);
+    spdlog::debug("{:.2} MB of transform data", (float)sizeof(Matrix) * ncells / 1024 / 1024);
 
     for (int j = 0; j < m_height * m_chunk_size; ++j) {
         for (int i = 0; i < m_width * m_chunk_size; ++i) {
@@ -70,4 +72,17 @@ std::optional<CellPosition> World::click(Camera3D const &camera) const
 
     do_for_visible_chunks(camera.position, pred);
     return pos;
+}
+
+void World::place_building(const std::string identifier, CellPosition position)
+{
+    m_buildings.at(identifier)->place(*this, position);
+    for (int j = -1; j <= 1; ++j) {
+        for (int i = -1; i <= 1; ++i) {
+            CellPosition p{ position.x + i, position.y + j };
+            if (p.x >= 0 && p.x < m_chunk_size * m_width && p.y >= 0 && p.y < m_chunk_size * m_height) {
+                get_cell_mut(p).terrain_type = TerrainType::Plain;
+            }
+        }
+    }
 }
