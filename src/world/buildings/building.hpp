@@ -2,6 +2,7 @@
 #define __BUILDING_H__
 
 #include "utils/cell_position.hpp"
+#include "utils/renderer.hpp"
 #include "world/chunk.hpp"
 #include "world/terrain.hpp"
 #include <raylib.h>
@@ -20,34 +21,30 @@ class Building
 
     virtual ~Building() = default;
 
-    virtual void update(World &world, float dt) = 0;
-    virtual void draw()                         = 0;
+    virtual void update(World &world, float dt)             = 0;
+    virtual void draw(Renderer &renderer) const             = 0;
     virtual void place(World &world, CellPosition position) = 0;
 
-    std::string const &identifier() const { return m_identifier; }
+    [[nodiscard]] std::string const &identifier() const { return m_identifier; }
 
     std::vector<CellPosition> m_positions;
 
-    protected:
-    std::string               m_identifier;
-
+  protected:
+    std::string m_identifier;
 };
 
-class SingleModelBuilding {
-    public:
-        SingleModelBuilding(std::string const& model_path) {
-            m_model = LoadModel(model_path.c_str());
-        }
+class SingleModelBuilding
+{
+  public:
+    explicit SingleModelBuilding(std::string const &model_path) { m_model = LoadModel(model_path.c_str()); }
 
-        ~SingleModelBuilding() {
-            UnloadModel(m_model);
-        }
+    ~SingleModelBuilding() { UnloadModel(m_model); }
 
-        void draw(CellPosition position) const {
-            DrawModel(m_model, position.to_vector3(), 1.0f, WHITE);
-        }
+    void draw(CellPosition position) const { DrawModel(m_model, position.to_vector3(), 1.0f, WHITE); }
 
-    private:
+    void draw_single(CellPosition position) const { draw(position); }
+
+  private:
     Model m_model{};
 };
 

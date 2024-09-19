@@ -55,7 +55,7 @@ struct TerrainManager
         tree01_model = TerrainModel(R"(assets\tree01.obj)", shader);
         tree02_model = TerrainModel(R"(assets\tree02.obj)", shader);
 
-        CreateLight(LIGHT_DIRECTIONAL, { -1.0f, 1.0f, -1.0f }, {0.0f, 0.0f, 0.0f}, WHITE, shader);
+        UpdateLightValues(shader, 0);
     }
 
     ~TerrainManager()

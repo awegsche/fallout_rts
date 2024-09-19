@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <spdlog/spdlog.h>
+#include <unordered_map>
 
 #include "ui/ui.hpp"
 #include "utils/cell_position.hpp"
@@ -57,7 +58,7 @@ struct WindowContext
 
 struct Game
 {
-    Game() : ctx(width, height)
+    Game() : ctx(width, height), world(std::make_unique<World>())
     {
         camera.position   = { -10.0f, 10.0f, -10.0f };
         camera.target     = { 5.0f, 5.0f, 5.0f };
@@ -73,7 +74,17 @@ struct Game
 
     ~Game() = default;
 
+    void new_world() {
+        world = std::make_unique<World>();
+    }
+
     void loop();
+
+    template<class T, class... Args> void new_building_type(Args &&...args)
+    {
+        auto new_building                       = std::make_shared<T>(args..., renderer);
+        world->m_buildings[new_building->identifier()] = new_building;
+    }
 
     // todo: private and const access
     // ctx must be declared first
@@ -81,14 +92,16 @@ struct Game
     uint32_t      height = HEIGHT;
     WindowContext ctx;
 
+    Renderer renderer;
     Camera3D    camera = {};
     std::string msg;
-    World       world;
+    std::unique_ptr<World> world;
     Gui         gui{};
-    GameState   state;
+    GameState   state = GameState::Running;
     size_t      ticks       = 0;
     bool        camera_move = false;
     std::optional<CellPosition> mouse_over;
+    std::unordered_map<std::string, std::shared_ptr<Building>> m_buildings;
 
     std::shared_ptr<Building> bld_to_construct = nullptr;
 };

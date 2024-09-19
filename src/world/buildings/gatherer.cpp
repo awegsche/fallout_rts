@@ -1,7 +1,9 @@
 #include "gatherer.hpp"
 #include <spdlog/spdlog.h>
 
+#include "raymath.h"
 #include "utils/cell_position.hpp"
+#include "utils/renderer.hpp"
 #include "world/world.hpp"
 
 void Gatherer::update(World &world, float dt)
@@ -37,7 +39,11 @@ void Gatherer::place(World &world, CellPosition position)
     m_positions.push_back(position);
 }
 
-void Gatherer::draw()
+void Gatherer::draw(Renderer &renderer) const
 {
-    for (auto pos : m_positions) { m_model.draw(pos); }
+    renderer.reset_instances();
+    for (auto pos : m_positions) {
+        renderer.push_instance_transform(pos.to_translation_matrix()); }
+
+    renderer.draw_instances(m_model);
 };

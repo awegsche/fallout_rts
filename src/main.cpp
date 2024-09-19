@@ -19,12 +19,12 @@ int main()
 
     Game game{};
 
-    game.world.new_building_type<Gatherer>("foodgatherer", "vault", "assets/food_gatherer.obj");
-    game.world.new_building_type<Vault>("vault", "assets/vault.obj");
+    game.new_building_type<Gatherer>("foodgatherer", "vault", "assets/food_gatherer.obj");
+    game.new_building_type<Vault>("vault", "assets/vault.obj");
 
-    game.world.place_building("vault", { 10, 10 });
-    game.world.place_building("foodgatherer", { 10, 15 });
-    game.world.place_building("foodgatherer", { 20, 25 });
+    game.world->place_building("vault", { 10, 10 });
+    game.world->place_building("foodgatherer", { 10, 15 });
+    game.world->place_building("foodgatherer", { 20, 25 });
 
     game.loop();
 }

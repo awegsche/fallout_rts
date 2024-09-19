@@ -53,6 +53,9 @@ add_executable(fallout_rts
     # buildings
     #"src/world/buildings/building_manager.cpp"
     "src/world/buildings/gatherer.cpp"
+
+    # utils
+    "src/utils/instanced_model.cpp"
     )
 
 target_include_directories(fallout_rts PRIVATE

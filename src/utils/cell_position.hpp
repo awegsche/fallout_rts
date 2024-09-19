@@ -18,6 +18,15 @@ struct CellPosition
     {
         return { x * GROUND_TILE_SIZE, height, y * GROUND_TILE_SIZE };
     }
+
+    [[nodiscard]] Matrix to_translation_matrix(float height = 0.0f) const {
+        return {
+            1.0f, 0.0f, 0.0f, static_cast<float>(x) * GROUND_TILE_SIZE,
+            0.0f, 1.0f, 0.0f, height,
+            0.0f, 0.0f, 1.0f, static_cast<float>(y) * GROUND_TILE_SIZE,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+    }
 };
 
 

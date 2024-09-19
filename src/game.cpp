@@ -10,17 +10,17 @@ void Game::loop()
         if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)) { camera_move = !camera_move; }
 
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || state == GameState::Building) {
-            mouse_over = world.click(camera);
+            mouse_over = world->click(camera);
         }
 
-        world.update(1.0f);
+        world->update(1.0f);
 
         BeginDrawing();
         ClearBackground({ 220, 200, 150, 255 });
 
         BeginMode3D(camera);
         {
-            world.draw(*this);
+            world->draw(*this);
         }
         EndMode3D();
 

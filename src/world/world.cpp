@@ -4,7 +4,10 @@
 
 #include "game.hpp"
 
-void World::draw(Game const &game) const
+constexpr auto KILO = 1024;
+constexpr auto MEGA = KILO * KILO;
+
+void World::draw(Game &game)
 {
     const auto pred = [this, &game](Chunk const &chunk) {
         m_terrain_manager->draw_chunk(chunk);
@@ -13,7 +16,9 @@ void World::draw(Game const &game) const
     do_for_visible_chunks(game.camera.target, pred);
 
     // draw all the buildings (todo: only in visible chunks)
-    for (auto b : m_buildings) { b.second->draw(); }
+    for (auto const& [key, building] : m_buildings) { building->draw(game.renderer); }
+
+    //if (game.bld_to_construct && game.mouse_over) { game.bld_to_construct->draw_single(*game.mouse_over); }
 }
 
 World::World()
@@ -37,16 +42,17 @@ World::World()
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
     std::mt19937                          gen{ rd() };
 
-    const size_t ncells = m_height * m_width * m_chunk_size * m_chunk_size;
+    const uint32_t ncells = m_height * m_width * m_chunk_size * m_chunk_size;
     m_cells.reserve(ncells);
     m_cell_transforms.reserve(ncells);
 
+    const float mega_cells = (float)ncells / MEGA;
     spdlog::debug("reserving space for {} cells", ncells);
-    spdlog::debug("{:.2} MB of cell data", (float)sizeof(Cell) * ncells / 1024 / 1024);
-    spdlog::debug("{:.2} MB of transform data", (float)sizeof(Matrix) * ncells / 1024 / 1024);
+    spdlog::debug("{:.2} MB of cell data", (float)sizeof(Cell) * mega_cells);
+    spdlog::debug("{:.2} MB of transform data", (float)sizeof(Matrix) * mega_cells);
 
-    for (int j = 0; j < m_height * m_chunk_size; ++j) {
-        for (int i = 0; i < m_width * m_chunk_size; ++i) {
+    for (uint32_t j = 0; j < m_height * m_chunk_size; ++j) {
+        for (uint32_t i = 0; i < m_width * m_chunk_size; ++i) {
             // m_chunks.emplace_back(m_chunk_size, i, j);
 
             const float value = dist(gen) * 0.1f + 0.5f;
@@ -74,16 +80,9 @@ std::optional<CellPosition> World::click(Camera3D const &camera) const
     return pos;
 }
 
-
-/**
- * @brief Updates the game world, called once every frame.
- *
- * @param dt The time elpased since last frame.
- */
-
 void World::update(float dt)
 {
-    for (auto &building : m_buildings) { building.second->update(*this, dt); }
+    for (auto &[key, building] : m_buildings) { building->update(*this, dt); }
 }
 
 void World::place_building(const std::string identifier, CellPosition position)
